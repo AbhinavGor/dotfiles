@@ -22,8 +22,8 @@ sensitivity = 40
 # The number of bars (0-200). 0 sets it to auto (fill up console).
 # Bars' width and space between bars in number of characters.
 bars = 0
-bar_width = 6 
-bar_spacing = 1
+bar_width = 10 
+bar_spacing = 3
 # bar_height is only used for output in "noritake" format
 ; bar_height = 32
 
@@ -160,14 +160,14 @@ bar_spacing = 1
 # You can define as many as 8 different colors. They range from bottom to top of screen
 gradient = 1
 gradient_count = 8
-gradient_color_8 = '#5673AE'
-gradient_color_7 = '#5270AC'
-gradient_color_6 = '#4E6CA9'
-gradient_color_5 = '#4564A4'
-gradient_color_4 = '#3C5D9F'
-gradient_color_3 = '#335599'
-gradient_color_2 = '#22468E'
-gradient_color_1 = '#103783'
+gradient_color_1 = '#59cc33'
+gradient_color_2 = '#80cc33'
+gradient_color_3 = '#a6cc33'
+gradient_color_4 = '#cccc33'
+gradient_color_5 = '#cca633'
+gradient_color_6 = '#cc8033'
+gradient_color_7 = '#cc5933'
+gradient_color_8 = '#cc3333'
 
 
 

@@ -10,7 +10,7 @@ killall -q polybar
 sleep .5
 
 if ! pgrep -x polybar; then
-	polybar base --config=/home/abhinavgorantla/.config/polybar/config&
+	polybar base --config=/home/abhinavgorantla/.config/polybar/config.ini&
 else
 	pkill -USR1 polybar
 fi
