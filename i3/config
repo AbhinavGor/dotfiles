@@ -10,7 +10,7 @@
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
-
+set $alt Mod1
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 font pango:monospace 8
@@ -18,6 +18,10 @@ font pango:monospace 8
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
+
+# Start XDG autostart .desktop files using dex. See also
+# https://wiki.archlinux.org/index.php/XDG_Autostart
+exec --no-startup-id dex --autostart --environment i3
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
@@ -37,16 +41,19 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
+bindsym $mod+F7 exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec kitty 
+bindsym $mod+Return exec kitty
 
 # kill focused window
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
+# bindsym $mod+d exec --no-startup-id dmenu_run
 bindsym $mod+d exec --no-startup-id rofi -show run
 # A more modern dmenu replacement is rofi:
 # bindcode $mod+40 exec "rofi -modi drun,run -show drun"
@@ -67,10 +74,10 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
+# bindsym $mod+Shift+j move left
+# bindsym $mod+Shift+k move down
+# bindsym $mod+Shift+l move up
+# bindsym $mod+Shift+semicolon move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -141,24 +148,15 @@ bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
-# media keys
-# Sreen brightness controls
-bindsym F12 exec xbacklight -inc 20 # increase screen brightness
-bindsym F11 exec xbacklight -dec 20 # decrease screen brightness
-
-# Media player controls
-bindsym XF86AudioPlay exec playerctl play-pause
-bindsym XF86AudioPause exec playerctl play-pause
-bindsym XF86AudioNext exec playerctl next
-bindsym XF86AudioPrev exec playerctl previous
-
-
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+# suspend i3
+bindsym $mod+Shift+l exec --no-startup-id "i3lock-fancy -p --text 'Enter password to unlock'"
+bindsym $mod+Shift+s exec --no-startup-id "i3lock-fancy -p --text 'Enter password to unlock'  && systemctl suspend"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -187,29 +185,45 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# Bind the "print screen key" to screenshot using scrot
-bindsym Print exec scrot
-
-# # Work bindings
-bindsym Control+$mod+l exec "i3lock -c 000000"
-# bindsym $mod+o exec firefox vit.ac.in 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-# bar {
-#         status_command i3status
-#         position top 
-# }
-default_border pixel 0
+bar {
+#	i3bar_command $HOME/.config/polybar/launch.sh
+        status_command i3status
+}
 
-gaps inner 10
-gaps outer 10
+# i3-gaps setup
+gaps inner 4
+gaps outer 4
 smart_gaps on
+default_border pixel 0
 
 exec --no-startup-id picom -f
 exec --no-startup-id nitrogen --restore
-exec xrandr --output HDMI-1 --auto --left-of eDP-1
 
-exec --no-startup-id polybar -r base
-exec --no-startup-id polybar -r mon2
-bindsym  $mod + F12 exec light -A 6 # increase screen brightness
-bindsym $mod + F11 exec light -U 6 # decrease screen brightness
+# Polybar startup
+# exec --no-startup-id polybar -r base --config=$HOME/.config/polybar/config.ini
+
+# Eww startup
+exec $HOME/.local/bin/eww/eww -c $HOME/.config/eww/ --restart open bar &
+
+# Brightness Function key maps
+bindsym  $mod+F12 exec brightnessctl s +200
+bindsym $mod+F11 exec brightnessctl s 200-
+
+# binding to open caja
+bindsym $mod+c exec nautilus 
+
+# binding to take screenshots
+bindsym Print exec scrot -e 'mv $f ~/Pictures/Screenshots/'
+
+# binding to open firefox
+bindsym $mod+Shift+w exec firefox
+
+# binding to run the maintainence script
+bindsym $mod+Shift+u exec kitty -e zsh -c 'bash ~/maintain.sh'
+
+# key binding to start dropbox
+bindsym $mod+Shift+d exec ~/.dropbox-dist/dropboxd &
+# kill dropbox
+bindsym $alt+Shift+d exec pkill -f dropbox
